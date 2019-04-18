@@ -1,0 +1,6 @@
+module Pods_AttrectoWeather {
+  umbrella header "Pods-AttrectoWeather-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="t2o-0h-sRs">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="vgu-Jc-g9e">
+            <objects>
+                <navigationController id="t2o-0h-sRs" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="pFh-Bz-8B5">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="LW6-Cp-10u" kind="relationship" relationship="rootViewController" id="wfE-Uu-wPP"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="t69-PA-K1h" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1583" y="56"/>
+        </scene>
+        <!--City List View Controller-->
+        <scene sceneID="6nz-o3-Eka">
+            <objects>
+                <viewController id="LW6-Cp-10u" customClass="CityListViewController" customModule="AttrectoWeather" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="i5C-6R-Prj">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Wav-uI-pHX" userLabel="CityListTableView">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Wav-uI-pHX" firstAttribute="top" secondItem="rcb-2o-1QT" secondAttribute="top" id="9jh-co-Hn5"/>
+                            <constraint firstItem="Wav-uI-pHX" firstAttribute="leading" secondItem="rcb-2o-1QT" secondAttribute="leading" id="aUd-gf-K8Z"/>
+                            <constraint firstItem="rcb-2o-1QT" firstAttribute="bottom" secondItem="Wav-uI-pHX" secondAttribute="bottom" id="jCk-vX-6yi"/>
+                            <constraint firstItem="rcb-2o-1QT" firstAttribute="trailing" secondItem="Wav-uI-pHX" secondAttribute="trailing" id="nEj-MI-BBO"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="rcb-2o-1QT"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="6BA-CQ-Aod"/>
+                    <connections>
+                        <outlet property="cityListTableView" destination="Wav-uI-pHX" id="Egg-DX-npo"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JRp-jM-ruC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-741" y="60"/>
+        </scene>
+        <!--Weather Status In City View Controller-->
+        <scene sceneID="5gM-Ui-yxQ">
+            <objects>
+                <viewController storyboardIdentifier="WeatherStatusInCityViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="qwl-BC-FWE" customClass="WeatherStatusInCityViewController" customModule="AttrectoWeather" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="E1j-Ab-ccF">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="aR5-zh-4vZ">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="aR5-zh-4vZ" firstAttribute="top" secondItem="pOU-lF-A2f" secondAttribute="top" id="4aA-9k-20P"/>
+                            <constraint firstItem="pOU-lF-A2f" firstAttribute="bottom" secondItem="aR5-zh-4vZ" secondAttribute="bottom" id="Cup-WQ-1RX"/>
+                            <constraint firstItem="pOU-lF-A2f" firstAttribute="trailing" secondItem="aR5-zh-4vZ" secondAttribute="trailing" id="k6e-2E-P8w"/>
+                            <constraint firstItem="aR5-zh-4vZ" firstAttribute="leading" secondItem="pOU-lF-A2f" secondAttribute="leading" id="shb-FL-sum"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="pOU-lF-A2f"/>
+                    </view>
+                    <connections>
+                        <outlet property="detailsTableView" destination="aR5-zh-4vZ" id="Dvh-wD-4ET"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="f23-r5-BUT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="55" y="56"/>
+        </scene>
+    </scenes>
+</document>
