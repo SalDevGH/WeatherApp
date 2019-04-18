@@ -30,6 +30,11 @@ class CityListViewController: UIViewController {
 		title = "Városlista".localized
 
 		setupDelegates()
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
 		fetchWeatherStatusOfCities()
 	}
 
