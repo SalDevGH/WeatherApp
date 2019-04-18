@@ -53,7 +53,7 @@ class OpenWeatherMapManager: NSObject {
 
 	// MARK: methods
 
-	public func getCurrentWeatherStatus(forCityGroup cityIdList: [Int]) -> [WeatherStatus]? {
+	@discardableResult public func getCurrentWeatherStatus(forCityGroup cityIdList: [Int]) -> [WeatherStatus]? {
 		// trying to provide it from cache first
 		if let cachedStatus = getWeatherStatusFromCache(forCityGroup: cityIdList) {
 			return cachedStatus
