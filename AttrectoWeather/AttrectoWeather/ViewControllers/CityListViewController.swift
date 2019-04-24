@@ -30,11 +30,6 @@ class CityListViewController: UIViewController {
 		title = "Városlista".localized
 
 		setupDelegates()
-	}
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-
 		fetchWeatherStatusOfCities()
 	}
 
@@ -47,9 +42,23 @@ class CityListViewController: UIViewController {
 	}
 
 	fileprivate func fetchWeatherStatusOfCities() {
-		weatherStatusForAllCities = OpenWeatherMapManager.shared.getCurrentWeatherStatus(
+		OpenWeatherMapManager.shared.fetchWeatherStatus(
 			forCityGroup: Config.CityData.idListToFetchDataFor
-		)
+		) { [weak self] (weatherStatusForCities, error) in
+			guard let strongSelf = self else {
+				return
+			}
+			strongSelf.weatherStatusForAllCities = weatherStatusForCities
+
+			if error != nil {
+				strongSelf.presentWeatherDataFetchingFailure()
+			}
+		}
+	}
+
+	fileprivate func presentWeatherDataFetchingFailure() {
+		presentErrorDialog(withTitle: "Hiba az adatok lekérdezése közben".localized,
+						   message: "Az idôjárási adatok lekérdezés nem sikerült, kérjük próbálja késôbb".localized)
 	}
 
 }
@@ -58,13 +67,12 @@ class CityListViewController: UIViewController {
 
 extension CityListViewController: OpenWeatherMapManagerDelegate {
 
-	func errorWhileTryingToGetWeatherData(_ openWeatherMapManager: OpenWeatherMapManager, forCityGroup cityIdList: [Int]) {
-		presentErrorDialog(withTitle: "Hiba az adatok lekérdezése közben".localized,
-						   message: "Az idôjárási adatok lekérdezés nem sikerült, kérjük próbálja késôbb".localized)
-	}
-
 	func weatherDataReceived(_ openWeatherMapManager: OpenWeatherMapManager, forCityGroup cityIdList: [Int]) {
 		fetchWeatherStatusOfCities()
+	}
+
+	func errorWhileTryingToGetWeatherData(_ openWeatherMapManager: OpenWeatherMapManager, forCityGroup cityIdList: [Int]) {
+		presentWeatherDataFetchingFailure()
 	}
 
 }
@@ -99,8 +107,6 @@ extension CityListViewController: UITableViewDataSource {
 extension CityListViewController: UITableViewDelegate {
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let storyBoard: UIStoryboard = UIStoryboard.init(name: Constants.detailsScreenStoryboardName, bundle: nil)
-
 		guard let statusArray = weatherStatusForAllCities,
 			  indexPath.row < statusArray.count,
 		      indexPath.row < Config.CityData.cityNames.count else {
@@ -110,6 +116,8 @@ extension CityListViewController: UITableViewDelegate {
 			)
 			return
 		}
+
+		let storyBoard: UIStoryboard = UIStoryboard.init(name: Constants.detailsScreenStoryboardName, bundle: nil)
 
 		if let detailsScreenViewController: WeatherStatusInCityViewController = storyBoard.instantiateViewController(
 				withIdentifier: Constants.detailsScreenViewControllerName) as? WeatherStatusInCityViewController {

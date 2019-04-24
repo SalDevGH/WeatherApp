@@ -11,8 +11,8 @@ import ObjectMapper
 
 struct CityListWeatherStatus: Mappable {
 
-	var countOfFetchedCities: Int?
-	var allCityStatuses: [WeatherStatus]?
+	fileprivate (set) var countOfFetchedCities: Int?
+	fileprivate (set) var allCityStatuses: [WeatherStatus]?
 
 	init?(map: Map) {
 	}

@@ -11,15 +11,15 @@ import ObjectMapper
 
 struct WeatherStatus: Mappable {
 
-	var cityId: Int?
-	var cityName: String?
-	var humanReadableStatus: String?
-	var temperature: Float?
-	var pressure: Int?
-	var humidity: Int?
-	var minimumTemperature: Float?
-	var maximumTemperature: Float?
-	var textualWeatherDescriptions: [TextualWeatherDescription]?
+	fileprivate (set) var cityId: Int?
+	fileprivate (set) var cityName: String?
+	fileprivate (set) var humanReadableStatus: String?
+	fileprivate (set) var temperature: Float?
+	fileprivate (set) var pressure: Int?
+	fileprivate (set) var humidity: Int?
+	fileprivate (set) var minimumTemperature: Float?
+	fileprivate (set) var maximumTemperature: Float?
+	fileprivate (set) var textualWeatherDescriptions: [TextualWeatherDescription]?
 
 	init?(map: Map) {
 	}

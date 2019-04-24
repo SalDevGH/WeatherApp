@@ -53,41 +53,78 @@ class OpenWeatherMapManager: NSObject {
 
 	// MARK: methods
 
-	@discardableResult public func getCurrentWeatherStatus(forCityGroup cityIdList: [Int]) -> [WeatherStatus]? {
+	// notifies delegate
+	public func fetchWeatherStatus(forCityGroup cityIdList: [Int]) {
 		// trying to provide it from cache first
-		if let cachedStatus = getWeatherStatusFromCache(forCityGroup: cityIdList) {
-			return cachedStatus
+		if getWeatherStatusFromCache(forCityGroup: cityIdList) != nil,
+		   let delegate = delegate {
+			delegate.weatherDataReceived(self, forCityGroup: cityIdList)
+			return
 		}
 
 		// starting API request
-		fetchWeatherStatus(forCityGroup: cityIdList)
-
-		// no data yet
-		return nil
-	}
-
-	fileprivate func fetchWeatherStatus(forCityGroup cityIdList: [Int]) {
 		let cityListString: String = (cityIdList.compactMap { String($0) }).joined(separator: ",")
 		let url: String = Constants.urlToGetCityListWeather + cityListString
 
-		Alamofire.request(url).responseObject { (response: DataResponse<CityListWeatherStatus>) in
+		Alamofire.request(url).responseObject { [weak self] ( response: DataResponse<CityListWeatherStatus>) in
+			guard let strongSelf = self,
+				  let delegate = strongSelf.delegate else {
+				return
+			}
+
 			// handle error if there were any
-			if response.result.error != nil,
-				let delegate = self.delegate {
-				delegate.errorWhileTryingToGetWeatherData(self, forCityGroup: cityIdList)
+			if response.result.error != nil {
+				delegate.errorWhileTryingToGetWeatherData(strongSelf, forCityGroup: cityIdList)
 				return
 			}
 
 			// make use of the received data
 			if let cityListWeatherStatus = response.result.value,
-				let lastStatusForCities = cityListWeatherStatus.allCityStatuses {
+			   let lastStatusForCities = cityListWeatherStatus.allCityStatuses {
+
 				// put data into cache
-				self.weatherCache.append(
+				strongSelf.weatherCache.append(
 					WeatherCache(lastUpdatedAt: Date(), cityIdList: cityIdList, lastStatusForCities: lastStatusForCities)
 				)
 
 				// notify delegate
-				self.delegate?.weatherDataReceived(self, forCityGroup: cityIdList)
+				delegate.weatherDataReceived(strongSelf, forCityGroup: cityIdList)
+			}
+		}
+	}
+
+	// notifies completion block
+	public func fetchWeatherStatus(forCityGroup cityIdList: [Int], completion: @escaping ([WeatherStatus], Error?) -> Void) {
+		// trying to provide it from cache first
+		if let status = getWeatherStatusFromCache(forCityGroup: cityIdList) {
+			completion(status, nil)
+			return
+		}
+
+		// starting API request
+		let cityListString: String = (cityIdList.compactMap { String($0) }).joined(separator: ",")
+		let url: String = Constants.urlToGetCityListWeather + cityListString
+
+		Alamofire.request(url).responseObject { [weak self] (response: DataResponse<CityListWeatherStatus>) in
+			guard let strongSelf = self else {
+				return
+			}
+
+			// handle error if there were any
+			if response.result.error != nil {
+				completion([], response.result.error)
+			}
+
+			// make use of the received data
+			if let cityListWeatherStatus = response.result.value,
+			   let lastStatusForCities = cityListWeatherStatus.allCityStatuses {
+
+				// put data into cache
+				strongSelf.weatherCache.append(
+					WeatherCache(lastUpdatedAt: Date(), cityIdList: cityIdList, lastStatusForCities: lastStatusForCities)
+				)
+
+				completion(lastStatusForCities, nil)
 			}
 		}
 	}

@@ -11,8 +11,8 @@ import ObjectMapper
 
 struct TextualWeatherDescription: Mappable {
 
-	var mainDescription: String?
-	var subDescription: String?
+	fileprivate (set) var mainDescription: String?
+	fileprivate (set) var subDescription: String?
 
 	init?(map: Map) {
 	}
