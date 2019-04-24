@@ -107,7 +107,8 @@ extension CityListViewController: UITableViewDataSource {
 extension CityListViewController: UITableViewDelegate {
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		guard let statusArray = weatherStatusForAllCities,
+		guard let navigationController = navigationController,
+			  let statusArray = weatherStatusForAllCities,
 			  indexPath.row < statusArray.count,
 		      indexPath.row < Config.CityData.cityNames.count else {
 			presentErrorDialog(
@@ -117,14 +118,13 @@ extension CityListViewController: UITableViewDelegate {
 			return
 		}
 
-		let storyBoard: UIStoryboard = UIStoryboard.init(name: Constants.detailsScreenStoryboardName, bundle: nil)
-
+		let storyBoard: UIStoryboard = UIStoryboard(name: Constants.detailsScreenStoryboardName, bundle: nil)
 		if let detailsScreenViewController: WeatherStatusInCityViewController = storyBoard.instantiateViewController(
 				withIdentifier: Constants.detailsScreenViewControllerName) as? WeatherStatusInCityViewController {
 
 			detailsScreenViewController.cityName = Config.CityData.cityNames[indexPath.row]
 			detailsScreenViewController.weatherStatusInCity = statusArray[indexPath.row]
-			navigationController?.pushViewController(detailsScreenViewController, animated: true)
+			navigationController.pushViewController(detailsScreenViewController, animated: true)
 		}
 	}
 
