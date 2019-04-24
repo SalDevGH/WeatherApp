@@ -71,7 +71,6 @@ class WeatherStatusInCityViewController: UIViewController {
 	// MARK: methods
 
 	fileprivate func setupDelegates() {
-		detailsTableView.delegate = self
 		detailsTableView.dataSource = self
 	}
 
@@ -97,9 +96,4 @@ extension WeatherStatusInCityViewController: UITableViewDataSource {
 		return cell
 	}
 
-}
-
-// MARK: UITableViewDelegate
-
-extension WeatherStatusInCityViewController: UITableViewDelegate {
 }

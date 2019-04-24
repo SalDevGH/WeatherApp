@@ -13,8 +13,14 @@ import AlamofireObjectMapper
 // MARK: OpenWeatherMapManager delegate protocol
 
 protocol OpenWeatherMapManagerDelegate: class {
+
 	func weatherDataReceived(_ openWeatherMapManager: OpenWeatherMapManager, forCityGroup cityIdList: [Int])
-	func errorWhileTryingToGetWeatherData(_ openWeatherMapManager: OpenWeatherMapManager, forCityGroup cityIdList: [Int])
+	func errorWhileTryingToGetWeatherData(
+		_ openWeatherMapManager: OpenWeatherMapManager,
+		forCityGroup cityIdList: [Int],
+		error: Error?
+	)
+
 }
 
 // MARK: OpenWeatherMapManager
@@ -74,7 +80,7 @@ class OpenWeatherMapManager: NSObject {
 
 			// handle error if there were any
 			if response.result.error != nil {
-				delegate.errorWhileTryingToGetWeatherData(strongSelf, forCityGroup: cityIdList)
+				delegate.errorWhileTryingToGetWeatherData(strongSelf, forCityGroup: cityIdList, error: response.result.error)
 				return
 			}
 

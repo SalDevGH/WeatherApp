@@ -30,7 +30,7 @@ class CityListViewController: UIViewController {
 		title = "Városlista".localized
 
 		setupDelegates()
-		fetchWeatherStatusOfCities()
+		fetchWeatherStatus(ofCities: Config.CityData.idListToFetchDataFor)
 	}
 
 	// MARK: methods
@@ -41,9 +41,9 @@ class CityListViewController: UIViewController {
 		cityListTableView.dataSource = self
 	}
 
-	fileprivate func fetchWeatherStatusOfCities() {
+	fileprivate func fetchWeatherStatus(ofCities cityIdList: [Int]) {
 		OpenWeatherMapManager.shared.fetchWeatherStatus(
-			forCityGroup: Config.CityData.idListToFetchDataFor
+			forCityGroup: cityIdList
 		) { [weak self] (weatherStatusForCities, error) in
 			guard let strongSelf = self else {
 				return
@@ -68,10 +68,14 @@ class CityListViewController: UIViewController {
 extension CityListViewController: OpenWeatherMapManagerDelegate {
 
 	func weatherDataReceived(_ openWeatherMapManager: OpenWeatherMapManager, forCityGroup cityIdList: [Int]) {
-		fetchWeatherStatusOfCities()
+		fetchWeatherStatus(ofCities: cityIdList)
 	}
 
-	func errorWhileTryingToGetWeatherData(_ openWeatherMapManager: OpenWeatherMapManager, forCityGroup cityIdList: [Int]) {
+	func errorWhileTryingToGetWeatherData(
+		_ openWeatherMapManager: OpenWeatherMapManager,
+		forCityGroup cityIdList: [Int],
+		error: Error?
+	) {
 		presentWeatherDataFetchingFailure()
 	}
 
