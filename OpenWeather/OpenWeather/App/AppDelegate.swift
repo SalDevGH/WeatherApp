@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func applicationDidBecomeActive(_ application: UIApplication) {
-		OpenWeatherMapManager.shared.fetchWeatherStatus(forCityGroup: Config.CityData.idListToFetchDataFor)
+		OpenWeatherMapManager.shared.fetchWeatherStatus(forCities: Config.CityData)
 	}
 
 	func applicationWillTerminate(_ application: UIApplication) {

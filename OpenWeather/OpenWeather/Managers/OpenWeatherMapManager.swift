@@ -14,10 +14,10 @@ import AlamofireObjectMapper
 
 protocol OpenWeatherMapManagerDelegate: class {
 
-	func weatherDataReceived(_ openWeatherMapManager: OpenWeatherMapManager, forCityGroup cityIdList: [Int])
+	func weatherDataReceived(_ openWeatherMapManager: OpenWeatherMapManager, forCities cityList: [CityDescription])
 	func errorWhileTryingToGetWeatherData(
 		_ openWeatherMapManager: OpenWeatherMapManager,
-		forCityGroup cityIdList: [Int],
+		forCities cityList: [CityDescription],
 		error: Error?
 	)
 
@@ -40,7 +40,7 @@ class OpenWeatherMapManager: NSObject {
 
 	struct WeatherCache {
 		var lastUpdatedAt: Date
-		var cityIdList: [Int]
+		var cityList: [CityDescription]
 		var lastStatusForCities: [WeatherStatus]
 	}
 
@@ -60,16 +60,16 @@ class OpenWeatherMapManager: NSObject {
 	// MARK: methods
 
 	// notifies delegate
-	public func fetchWeatherStatus(forCityGroup cityIdList: [Int]) {
+	public func fetchWeatherStatus(forCities cityList: [CityDescription]) {
 		// trying to provide it from cache first
-		if getWeatherStatusFromCache(forCityGroup: cityIdList) != nil,
+		if getWeatherStatusFromCache(forCities: cityList) != nil,
 		   let delegate = delegate {
-			delegate.weatherDataReceived(self, forCityGroup: cityIdList)
+			delegate.weatherDataReceived(self, forCities: cityList)
 			return
 		}
 
 		// starting API request
-		let cityListString: String = (cityIdList.compactMap { String($0) }).joined(separator: ",")
+		let cityListString: String = (cityList.compactMap { String($0.id) }).joined(separator: ",")
 		let url: String = Constants.urlToGetCityListWeather + cityListString
 
 		Alamofire.request(url).responseObject { [weak self] ( response: DataResponse<CityListWeatherStatus>) in
@@ -80,7 +80,7 @@ class OpenWeatherMapManager: NSObject {
 
 			// handle error if there were any
 			if response.result.error != nil {
-				delegate.errorWhileTryingToGetWeatherData(strongSelf, forCityGroup: cityIdList, error: response.result.error)
+				delegate.errorWhileTryingToGetWeatherData(strongSelf, forCities: cityList, error: response.result.error)
 				return
 			}
 
@@ -90,25 +90,28 @@ class OpenWeatherMapManager: NSObject {
 
 				// put data into cache
 				strongSelf.weatherCache.append(
-					WeatherCache(lastUpdatedAt: Date(), cityIdList: cityIdList, lastStatusForCities: lastStatusForCities)
+					WeatherCache(lastUpdatedAt: Date(), cityList: cityList, lastStatusForCities: lastStatusForCities)
 				)
 
 				// notify delegate
-				delegate.weatherDataReceived(strongSelf, forCityGroup: cityIdList)
+				delegate.weatherDataReceived(strongSelf, forCities: cityList)
 			}
 		}
 	}
 
 	// notifies completion block
-	public func fetchWeatherStatus(forCityGroup cityIdList: [Int], completion: @escaping ([WeatherStatus], Error?) -> Void) {
+	public func fetchWeatherStatus(
+			forCities cityList: [CityDescription],
+			completion: @escaping ([WeatherStatus], Error?) -> Void) {
+
 		// trying to provide it from cache first
-		if let status = getWeatherStatusFromCache(forCityGroup: cityIdList) {
+		if let status = getWeatherStatusFromCache(forCities: cityList) {
 			completion(status, nil)
 			return
 		}
 
 		// starting API request
-		let cityListString: String = (cityIdList.compactMap { String($0) }).joined(separator: ",")
+		let cityListString: String = (cityList.compactMap { String($0.id) }).joined(separator: ",")
 		let url: String = Constants.urlToGetCityListWeather + cityListString
 
 		Alamofire.request(url).responseObject { [weak self] (response: DataResponse<CityListWeatherStatus>) in
@@ -127,7 +130,7 @@ class OpenWeatherMapManager: NSObject {
 
 				// put data into cache
 				strongSelf.weatherCache.append(
-					WeatherCache(lastUpdatedAt: Date(), cityIdList: cityIdList, lastStatusForCities: lastStatusForCities)
+					WeatherCache(lastUpdatedAt: Date(), cityList: cityList, lastStatusForCities: lastStatusForCities)
 				)
 
 				completion(lastStatusForCities, nil)
@@ -135,12 +138,12 @@ class OpenWeatherMapManager: NSObject {
 		}
 	}
 
-	fileprivate func getWeatherStatusFromCache(forCityGroup cityIdList: [Int]) -> [WeatherStatus]? {
+	fileprivate func getWeatherStatusFromCache(forCities cityList: [CityDescription]) -> [WeatherStatus]? {
 		// drop old data first
 		invalidateOutdatedCachedEntries()
 
 		// find status in cache, if exists
-		if let cachedStatus = (weatherCache.first {	$0.cityIdList == cityIdList	}) {
+		if let cachedStatus = (weatherCache.first {	$0.cityList == cityList }) {
 			return cachedStatus.lastStatusForCities
 		}
 

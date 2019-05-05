@@ -21,6 +21,7 @@
 		FC71E7DB22688D250043F059 /* TextualWeatherDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC71E7DA22688D250043F059 /* TextualWeatherDescription.swift */; };
 		FC71E7DD22688DA90043F059 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC71E7DC22688DA90043F059 /* String+Localized.swift */; };
 		FC71E7E0226896410043F059 /* UIViewController+PresentErrorDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC71E7DF226896410043F059 /* UIViewController+PresentErrorDialog.swift */; };
+		FC7C90E6227EEEE70052BC01 /* CityDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7C90E5227EEEE70052BC01 /* CityDescription.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		FC71E7DA22688D250043F059 /* TextualWeatherDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextualWeatherDescription.swift; sourceTree = "<group>"; };
 		FC71E7DC22688DA90043F059 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		FC71E7DF226896410043F059 /* UIViewController+PresentErrorDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PresentErrorDialog.swift"; sourceTree = "<group>"; };
+		FC7C90E5227EEEE70052BC01 /* CityDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityDescription.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 				FC71E7D82268839A0043F059 /* CityListWeatherStatus.swift */,
 				FC71E7DA22688D250043F059 /* TextualWeatherDescription.swift */,
 				FC509E6C2267C8DC0032E33F /* WeatherStatus.swift */,
+				FC7C90E5227EEEE70052BC01 /* CityDescription.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 				FC509E522267C4DE0032E33F /* AppDelegate.swift in Sources */,
 				FC509E642267C6600032E33F /* Config.swift in Sources */,
 				FC71E7E0226896410043F059 /* UIViewController+PresentErrorDialog.swift in Sources */,
+				FC7C90E6227EEEE70052BC01 /* CityDescription.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

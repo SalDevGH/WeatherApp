@@ -44,7 +44,8 @@ class CityListViewController: UIViewController {
 		title = "City list".localized
 
 		setupDelegates()
-		fetchWeatherStatus(ofCities: Config.CityData.idListToFetchDataFor)
+		fetchWeatherStatus(ofCities: Config.CityData)
+		backgroundView.backgroundColor = .clear
 
 		guard let navigationController = navigationController else {
 			return
@@ -55,7 +56,6 @@ class CityListViewController: UIViewController {
 //			navigationController.navigationBar.largeTitleTextAttributes = [
 //			]
 		}
-		backgroundView.backgroundColor = .clear
 	}
 
 	// MARK: methods
@@ -66,9 +66,8 @@ class CityListViewController: UIViewController {
 		cityListTableView.dataSource = self
 	}
 
-	fileprivate func fetchWeatherStatus(ofCities cityIdList: [Int]) {
-		OpenWeatherMapManager.shared.fetchWeatherStatus(
-			forCityGroup: cityIdList
+	fileprivate func fetchWeatherStatus(ofCities cityList: [CityDescription]) {
+		OpenWeatherMapManager.shared.fetchWeatherStatus(forCities: cityList
 		) { [weak self] (weatherStatusForCities, error) in
 			guard let strongSelf = self else {
 				return
@@ -82,8 +81,10 @@ class CityListViewController: UIViewController {
 	}
 
 	fileprivate func presentWeatherDataFetchingFailure() {
-		presentErrorDialog(withTitle: "Error".localized,
-						   message: "Weather data could not be received at the moment, please try again later.".localized)
+		presentErrorDialog(
+			withTitle: "Fetching error".localized,
+		    message: "Weather data could not be received at the moment, please try again later.".localized
+		)
 	}
 
 }
@@ -92,13 +93,13 @@ class CityListViewController: UIViewController {
 
 extension CityListViewController: OpenWeatherMapManagerDelegate {
 
-	func weatherDataReceived(_ openWeatherMapManager: OpenWeatherMapManager, forCityGroup cityIdList: [Int]) {
-		fetchWeatherStatus(ofCities: cityIdList)
+	func weatherDataReceived(_ openWeatherMapManager: OpenWeatherMapManager, forCities cityList: [CityDescription]) {
+		fetchWeatherStatus(ofCities: cityList)
 	}
 
 	func errorWhileTryingToGetWeatherData(
 		_ openWeatherMapManager: OpenWeatherMapManager,
-		forCityGroup cityIdList: [Int],
+		forCities cityList: [CityDescription],
 		error: Error?
 	) {
 		presentWeatherDataFetchingFailure()
@@ -111,21 +112,20 @@ extension CityListViewController: OpenWeatherMapManagerDelegate {
 extension CityListViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return Config.CityData.cityNames.count
+		return Config.CityData.count
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
 
-		guard indexPath.row < Config.CityData.countyList.count,
-			  indexPath.row < Config.CityData.cityNames.count,
+		guard indexPath.row < Config.CityData.count,
 			  let textLabel = cell.textLabel,
 			  let detailLabel = cell.detailTextLabel else {
 			return cell
 		}
 
-		textLabel.text = Config.CityData.cityNames[indexPath.row]
-		detailLabel.text = Config.CityData.countyList[indexPath.row]
+		textLabel.text = Config.CityData[indexPath.row].name
+		detailLabel.text = Config.CityData[indexPath.row].countyName
 		cell.backgroundColor = .clear
 		cell.selectionStyle = .none
 
@@ -139,14 +139,14 @@ extension CityListViewController: UITableViewDataSource {
 extension CityListViewController: UITableViewDelegate {
 
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return 250
+		return 150
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		guard let navigationController = navigationController,
 			  let statusArray = weatherStatusForAllCities,
 			  indexPath.row < statusArray.count,
-		      indexPath.row < Config.CityData.cityNames.count else {
+		      indexPath.row < Config.CityData.count else {
 			presentErrorDialog(
 				withTitle: "Unknown city status".localized,
 				message: "No status data available for this city".localized
@@ -158,7 +158,7 @@ extension CityListViewController: UITableViewDelegate {
 		if let detailsScreenViewController: WeatherStatusInCityViewController = storyBoard.instantiateViewController(
 				withIdentifier: Constants.detailsScreenViewControllerName) as? WeatherStatusInCityViewController {
 
-			detailsScreenViewController.cityName = Config.CityData.cityNames[indexPath.row]
+			detailsScreenViewController.city = Config.CityData[indexPath.row]
 			detailsScreenViewController.weatherStatusInCity = statusArray[indexPath.row]
 			navigationController.pushViewController(detailsScreenViewController, animated: true)
 		}

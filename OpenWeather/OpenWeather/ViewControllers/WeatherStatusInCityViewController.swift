@@ -51,7 +51,7 @@ class WeatherStatusInCityViewController: UIViewController {
 
 	// MARK: variables
 
-	var cityName: String?
+	var city: CityDescription?
 	var weatherStatusInCity: WeatherStatus?
 	@IBOutlet fileprivate var detailsTableView: UITableView!
 
@@ -65,7 +65,7 @@ class WeatherStatusInCityViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		title = cityName
+		title = city?.name ?? "City data".localized
 	}
 
 	// MARK: methods
@@ -82,7 +82,7 @@ class WeatherStatusInCityViewController: UIViewController {
 extension WeatherStatusInCityViewController: UITableViewDelegate {
 
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return 200
+		return 100
 	}
 
 }
